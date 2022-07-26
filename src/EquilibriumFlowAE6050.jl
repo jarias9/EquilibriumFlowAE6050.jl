@@ -12,6 +12,7 @@ using LeastSquaresOptim
 using Roots
 
 # Import scripts
+include("flowmodels.jl")
 include("reactionmodels.jl")
 include("reactionsystem.jl")
 include("equilibriumconstant.jl")
@@ -21,8 +22,14 @@ include("partitionfunctions.jl")
 include("equilibriumTP.jl")
 include("equilibriumHP.jl")
 include("equilibriumentropy.jl")
-include("flowmodels.jl")
 include("equilibriumflow.jl")
+
+# Export constants 
+export constants
+
+# Export models and flow problems
+export Air5s, Air7s, Air11s, Air13s, CO2_6s
+export NormalShock, ObliqueShock, θ, β
 
 # Export relevant methods
 export equilibriumTP, equilibriumHP, equilibriumflow
