@@ -76,7 +76,7 @@ end
 #     return T2, h2, P2, rho2, u2, s2, X2, theta
 # end
 
-function equilibriumflow(problem::ObliqueShock, angleType::θ, model, angle, u1, T1, P1)
+function equilibriumflow(problem::ObliqueShock, angleType::DeflectionAngle, model, angle, u1, T1, P1)
     # Note: Due to the nature of this solver
     # This function will find the wave angle 
     # corresponding to the weak solution
@@ -141,7 +141,7 @@ end
 #     return T2, h2, P2, rho2, u2, s2, X2, delta
 # end
 
-function equilibriumflow(problem::ObliqueShock, angleType::β, model, angle, u1, T1, P1)
+function equilibriumflow(problem::ObliqueShock, angleType::ShockAngle, model, angle, u1, T1, P1)
     # Set starting angles
     beta = angle 
 

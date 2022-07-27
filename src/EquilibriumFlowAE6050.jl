@@ -29,7 +29,7 @@ export constants
 
 # Export models and flow problems
 export Air5s, Air7s, Air11s, Air13s, CO2_6s
-export NormalShock, ObliqueShock, θ, β
+export NormalShock, ObliqueShock, DeflectionAngle, ShockAngle
 
 # Export relevant methods
 export equilibriumTP, equilibriumHP, equilibriumflow

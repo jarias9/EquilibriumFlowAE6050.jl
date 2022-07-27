@@ -6,10 +6,10 @@ end
     classification::String="Oblique Shock"
 end
 
-@with_kw struct β
+@with_kw struct ShockAngle
     classification::String="Shock Angle"
 end
 
-@with_kw struct θ 
+@with_kw struct DeflectionAngle
     classification::String="Turning Angle"
 end
