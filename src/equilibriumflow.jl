@@ -22,7 +22,7 @@ function equilibriumflow(problem::NormalShock, model, u1, T1, P1)
     ϵ_last = ϵ
     ϵ = rho1 / rho2
     res_ϵ = abs(ϵ - ϵ_last)/abs(ϵ)
-    @printf "ϵ: %f, res_ϵ: %f, i: %f \n" ϵ res_ϵ i
+    #@printf "ϵ: %f, res_ϵ: %f, i: %f \n" ϵ res_ϵ i
     if res_ϵ < tol
         break
     end
@@ -34,47 +34,6 @@ function equilibriumflow(problem::NormalShock, model, u1, T1, P1)
 
     return T2, h2, P2, rho2, u2, s2, X2
 end
-
-# function equilibriumflow(problem::ObliqueShock, angleType::δ, model, angle, u1, T1, P1)
-#     # Note: Due to the nature of this solver
-#     # This function will find the wave angle 
-#     # corresponding to the weak solution
-#     # Set starting angles
-#     delta = angle 
-#     theta = angle # need starting angle for theta 
-
-#     # Generate initial state
-#     #h1, rho1, s1, X1 = equilibriumTP(model, T1, P1)
-
-#     # Since we do not know wave angle, we must iterate
-#     # until converging on theta value
-#     u2 = deepcopy(u1)
-#     u2n = deepcopy(u1)
-#     tol = 1e-7
-#     for i = 1:10
-#     # Calculate normal velocity value
-#     u1n = u1 * sind(theta)
-
-#     # Calculate post shock state
-#     T2, h2, P2, rho2, u2n, s2, X2 = equilibriumflow(NormalShock(), model, u1n, T1, P1)
-
-#     # Calculate δ angle
-#     theta_last = theta
-#     calcangle(delta, theta, u2n, u1n) = tand(theta - delta)/tand(theta) - u2n/u1n
-#     angleres(theta) = calcangle(delta, theta, u2n, u1n) # uses theta as initial guess
-#     theta = find_zero(angleres, delta, Roots.Order0())
-#     res_θ = abs(theta - theta_last)/abs(theta)
-#     @printf "theta: %f, res_ϵ: %f, i: %f \n" theta res_θ i
-#     if res_θ < tol
-#         break
-#     end
-#     end
-
-#     # Calculate Oblique velocity 
-#     u2 = u2n / sind(theta - delta)
-
-#     return T2, h2, P2, rho2, u2, s2, X2, theta
-# end
 
 function equilibriumflow(problem::ObliqueShock, angleType::DeflectionAngle, model, angle, u1, T1, P1)
     # Note: Due to the nature of this solver
@@ -99,13 +58,14 @@ function equilibriumflow(problem::ObliqueShock, angleType::DeflectionAngle, mode
     # Calculate post shock state
     T2, h2, P2, rho2, u2n, s2, X2 = equilibriumflow(NormalShock(), model, u1n, T1, P1)
 
-    # Calculate δ angle
+    # Calculate β angle
     beta_last = beta
     calcangle(theta, beta, u2n, u1n) = tand(beta - theta)/tand(beta) - u2n/u1n
     angleres(beta) = calcangle(theta, beta, u2n, u1n) # uses beta as initial guess
     beta = find_zero(angleres, theta, Roots.Order0())
+    #beta = find_zero(angleres, (0.001, 89.999), Bisection())
     res_θ = abs(beta - beta_last)/abs(beta)
-    @printf "beta: %f, res_ϵ: %f, i: %f \n" beta res_θ i
+    #@printf "beta: %f, res_ϵ: %f, i: %f \n" beta res_θ i
     if res_θ < tol
         break
     end
@@ -116,30 +76,6 @@ function equilibriumflow(problem::ObliqueShock, angleType::DeflectionAngle, mode
 
     return T2, h2, P2, rho2, u2, s2, X2, beta
 end
-
-# function equilibriumflow(problem::ObliqueShock, angleType::θ, model, angle, u1, T1, P1)
-#     # Set starting angles
-#     theta = angle 
-
-#     # Generate initial state
-#     #h1, rho1, s1, X1 = equilibriumTP(model, T1, P1)
-
-#     # Calculate normal velocity value
-#     u1n = u1 * sind(theta)
-
-#     # Calculate post shock state
-#     T2, h2, P2, rho2, u2n, s2, X2 = equilibriumflow(NormalShock(), model, u1n, T1, P1)
-
-#     # Calculate δ angle
-#     calcangle(delta, theta, u2n, u1n) = tand(theta - delta)/tand(theta) - u2n/u1n
-#     angleres(delta) = calcangle(delta, theta, u2n, u1n)
-#     delta = find_zero(angleres, theta, Roots.Order0())
-
-#     # Calculate Oblique velocity 
-#     u2 = u2n / sind(theta - delta)
-
-#     return T2, h2, P2, rho2, u2, s2, X2, delta
-# end
 
 function equilibriumflow(problem::ObliqueShock, angleType::ShockAngle, model, angle, u1, T1, P1)
     # Set starting angles
@@ -154,10 +90,11 @@ function equilibriumflow(problem::ObliqueShock, angleType::ShockAngle, model, an
     # Calculate post shock state
     T2, h2, P2, rho2, u2n, s2, X2 = equilibriumflow(NormalShock(), model, u1n, T1, P1)
 
-    # Calculate δ angle
+    # Calculate θ angle
     calcangle(theta, beta, u2n, u1n) = tand(beta - theta)/tand(beta) - u2n/u1n
     angleres(theta) = calcangle(theta, beta, u2n, u1n)
-    theta = find_zero(angleres, beta, Roots.Order0())
+    #theta = find_zero(angleres, beta, Roots.Order0())
+    theta = find_zero(angleres, (-0.00001, 90.00001))
 
     # Calculate Oblique velocity 
     u2 = u2n / sind(beta - theta)
